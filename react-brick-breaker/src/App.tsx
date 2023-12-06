@@ -1,6 +1,6 @@
 // import React from 'react';
-// import BrickBreaker from "./components/BrickBreaker";
-import BrickBreaker from "./components/BrickBreakerGame";
+import BrickBreaker from "./components/BrickBreaker";
+
 
 
 const App = () => {

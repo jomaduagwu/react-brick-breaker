@@ -1,17 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 
 const BrickBreaker = () => {
-  //   const canvasRef = useRef<HTMLCanvasElement>(null);
-  //   const [width, setWidth] = useState<number>(0);
-  //   const [height, setHeight] = useState<number>(0);
-  //   const [paddleX, setPaddleX] = useState<number>(0);
-
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const [x, setX] = useState(200);
-  const [y, setY] = useState(150);
-  const [dx, setDx] = useState(1);
-  const [dy, setDy] = useState(-3);
+  const [x, setX] = useState(200); // starting horizontal position of ball
+  const [y, setY] = useState(150); // starting vertical position of ball
+  const [dx, setDx] = useState(1); // amount ball should move horizontally
+  const [dy, setDy] = useState(-3); // amount ball should move vertically
 
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
   const [width, setWidth] = useState<number>(0);
@@ -19,21 +14,20 @@ const BrickBreaker = () => {
   const [paddleX, setPaddleX] = useState<number>(0);
   const [bricks, setBricks] = useState<boolean[][]>([]);
   //   const [brickWidth, setBrickWidth] = useState<number>(0);
-  const paddleH = 10;
-  const paddleW = 75;
-  const [canvasMinX, setCanvasMinX] = useState<number>(0);
-  const [canvasMaxX, setCanvasMaxX] = useState<number>(0);
+  const paddleH = 10; // paddle height
+  const paddleW = 75; // paddle width
+  const [canvasMinX, setCanvasMinX] = useState<number>(0); // minimum canvas x bounds
+  const [canvasMaxX, setCanvasMaxX] = useState<number>(0); // maximum canvas x bounds
   const [intervalId, setIntervalId] = useState<number | null>(null);
-  const nrows = 6;
-  const ncols = 6;
-  const brickHeight = 15;
-  const brickWidth = 75; // or 70
-  const padding = 1;
+  const nrows = 6; // number of rows of bricks
+  const ncols = 6; // number of columns of bricks
+  const brickHeight = 15; // height of each brick
+  const brickWidth = 75; // width of each brick
+  const padding = 1; // spacing between each brick
 
   const ballRadius = 10;
 
   const brickColors = ["#80CBC4", "#455A64 ", "#FFE0B2", "#A5D6A7", "#D43ED8"];
-//   const brickColors = ["grey", "red", "purple", "orange"];
   const paddleColor = "black";
   const ballColor = "black";
   const backColor = "lightgrey";
@@ -53,21 +47,6 @@ const BrickBreaker = () => {
       bricks.push(row);
     }
     return bricks;
-  };
-
-  // Clear the screen in between drawing each animation
-  const clearCanvas = () => {
-    if (ctx) {
-      ctx.clearRect(0, 0, width, height);
-      drawRect(0, 0, width, height);
-    }
-    //   const clearCanvas = (
-    //     context: CanvasRenderingContext2D,
-    //     width: number,
-    //     height: number,
-    //   ) => {
-    // context.clearRect(0, 0, width, height);
-    // drawRect(context, 0, 0, width, height);
   };
 
   // Used to draw the ball
@@ -90,6 +69,14 @@ const BrickBreaker = () => {
     }
   };
 
+  // Clear the screen in between drawing each animation
+  const clearCanvas = () => {
+    if (ctx) {
+      ctx.clearRect(0, 0, width, height);
+      drawRect(0, 0, width, height);
+    }
+  };
+
   const drawBricks = () => {
     for (let i = 0; i < nrows; i++) {
       for (let j = 0; j < ncols; j++) {
@@ -101,7 +88,7 @@ const BrickBreaker = () => {
             j * (brickWidth + padding) + padding,
             i * (brickHeight + padding) + padding,
             brickWidth,
-            brickHeight,
+            brickHeight
           );
         }
       }
@@ -126,14 +113,12 @@ const BrickBreaker = () => {
 
   // What to do when the mouse moves within the canvas
   const onMouseMove = (
-    evt: React.MouseEvent<HTMLCanvasElement, MouseEvent>,
+    evt: React.MouseEvent<HTMLCanvasElement, MouseEvent>
   ) => {
     if (evt.pageX > canvasMinX && evt.pageX < canvasMaxX) {
       const newPaddleX = Math.max(evt.pageX - canvasMinX - paddleW / 2, 0);
       setPaddleX(Math.min(width - paddleW, newPaddleX));
-      //   return Math.min(width - paddleW, newPaddleX);
     }
-    // return paddleX;
   };
 
   const handleKeyDown = (evt: React.KeyboardEvent) => {
@@ -152,9 +137,9 @@ const BrickBreaker = () => {
 
   const reload = () => {
     setScore(0); // resets score to 0 if reloaded
-    updateScoreText(); // clear the score displayed if reloaded
+    // updateScoreText(); // clear the score displayed if reloaded
     setBricks(initBricks()); // initialize the bricks, set all to visible
-    setPaused(false);
+    setPaused(false); // set paused to false
     setX(200); // starting horizontal position of ball
     setY(150); // starting vertical position of ball
     setDx(1); // amount ball should move horizontally
@@ -213,56 +198,28 @@ const BrickBreaker = () => {
     setY((prevY) => prevY + dy);
   };
 
-//   const handleKeyDown = (evt: KeyboardEvent) => {
-//     if (evt.key === " ") {
-//         pause();
-//     };
-//     window.addEventListener("keydown", handleKeyDown);
-//   }
-
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas?.getContext("2d");
-
-    const handleKeyDown = (evt: KeyboardEvent) => {
-        if (evt.key === " ") {
-            pause();
-        }
-        
-    }
 
     if (canvas && context) {
       setCtx(context);
       setWidth(canvas.offsetWidth);
       setHeight(canvas.offsetHeight);
-    //   setWidth(canvas.width);
-    //   setHeight(canvas.height);
       setPaddleX(width / 2);
       setCanvasMinX(canvas.offsetLeft);
       setCanvasMaxX(canvas.offsetLeft + width);
-      // Initialize other state variables and start the animation
       setBricks(initBricks());
       startAnimation();
     }
 
-    // const handleKeyDown = (evt: KeyboardEvent) => {
-    //     if (evt.key === " ") {
-    //         pause();
-    //     };
-    //     window.addEventListener("keydown", handleKeyDown);
-    // }
-    })
-
-    window.addEventListener("keydown", handleKeyDown);
+    const animationFrame = requestAnimationFrame(draw);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      stopAnimation();
+      cancelAnimationFrame(animationFrame);
+      document.removeEventListener("keydown", handleKeyDown);
     };
-    //   }, [canvasRef, ncols]);
-  }, [canvas, width, height, handleKeyDown, stopAnimation]);
-
-//   const reload = () => {}
+  }, [width, height, paddleX, startAnimation, handleKeyDown, draw]);
 
   return (
     <div>
@@ -271,13 +228,13 @@ const BrickBreaker = () => {
         width={500}
         height={300}
         onMouseMove={onMouseMove}
-        onKeyDown={onKeyDown}
+        onKeyDown={handleKeyDown}
       />
       <p>Mouse moves platform &bull; Press any key to pause</p>
       <button onClick={reload}>Play again</button>
       <div id="score">Score: {score}</div>
     </div>
   );
-
+};
 
 export default BrickBreaker;
