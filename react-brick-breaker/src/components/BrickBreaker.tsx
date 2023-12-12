@@ -1,10 +1,15 @@
+// import statement
 import React, { useState, useEffect, useRef, useCallback } from "react";
 
+// functional component declaration
 const BrickBreaker = () => {
+  // state and refs declaration
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const [x, setX] = useState(200); // starting horizontal position of ball
-  const [y, setY] = useState(150); // starting vertical position of ball
+  const ballRef = useRef({x: 200, y: 150}); // ref for ball position
+
+  // const [x, setX] = useState(200); // starting horizontal position of ball
+  // const [y, setY] = useState(150); // starting vertical position of ball
   const [dx, setDx] = useState(1); // amount ball should move horizontally
   const [dy, setDy] = useState(-3); // amount ball should move vertically
 
@@ -21,8 +26,8 @@ const BrickBreaker = () => {
   const [canvasMinX, setCanvasMinX] = useState<number>(0); // minimum canvas x bounds
   const [canvasMaxX, setCanvasMaxX] = useState<number>(0); // maximum canvas x bounds
   const [intervalId, setIntervalId] = useState<number | null>(null);
-  const nrows = 6; // number of rows of bricks
-  const ncols = 6; // number of columns of bricks
+  const nrows: number = 6; // number of rows of bricks
+  const ncols: number = 6; // number of columns of bricks
   const brickHeight = 15; // height of each brick
   const brickWidth = 75; // width of each brick
   const padding = 1; // spacing between each brick
@@ -34,12 +39,9 @@ const BrickBreaker = () => {
   const ballColor = "black";
   const backColor = "lightgrey";
 
-  const [score, setScore] = useState(0); // store the number of bricks eliminated
-  const [paused, setPaused] = useState(false); // keep track of whether the game is paused or not
 
   // Initialize an array of bricks to be visible (true)
   const initBricks = () => {
-    // no update needed
     //   const initBricks = (nrows: number, ncols: number) => {
     const bricks: boolean[][] = [];
     for (let i = 0; i < nrows; i++) {
@@ -106,10 +108,10 @@ const BrickBreaker = () => {
 
   const startAnimation = useCallback(() => {
     console.log("Start Animation");
-    const id = window.setInterval(draw, 10);
+    const id = window.setInterval(draw, 1);
     setIntervalId(id);
   }, []);
-  x;
+  
   const stopAnimation = () => {
     // no update needed
     console.log("Stop animation");
@@ -254,9 +256,8 @@ const BrickBreaker = () => {
       //   cancelAnimationFrame(animationFrame);
       document.removeEventListener("keydown", handleKeyDown);
       stopAnimation();
-      ``;
     };
-  }, [canvasRef.current, draw, startAnimation, stopAnimation]);
+  }, [canvasRef.current, startAnimation, draw, stopAnimation]);
 
   //   }, [width, height, paddleX, startAnimation, handleKeyDown, draw, stopAnimation]);
 
