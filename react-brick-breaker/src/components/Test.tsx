@@ -70,6 +70,52 @@ const New: React.FC = () => {
 
   }, [paddleW]);
 
+  const draw = () => {
+    if (paused || !ctx || !canvasRef.current) return;
+    drawBackground();
+  //   clear();
+  //   ctx.fillStyle = backColor;
+    
+    ctx.fillStyle = ballColor;
+    // draw the ball
+    drawCircle(ballRef.current.x, ballRef.current.y, ballRef.current.radius);
+    ctx.fillStyle = paddleColor;
+    console.log("ball drawn");
+    // draw the paddle
+    drawRect(paddleX, canvasRef.current.height - paddleH, paddleW, paddleH);
+    console.log("paddle drawn");
+
+    // update ball positionx
+    ballRef.current.x += ballRef.current.dx;
+    ballRef.current.y += ballRef.current.dy;
+
+    // draw bricks
+    drawBricks();
+
+    // handle brick collision
+    handleBrickCollision();
+
+    // handle wall collision
+    handleWallCollision();
+
+  //   // update ball positionx
+  //   ballRef.current.x += ballRef.current.dx;
+  //   ballRef.current.y += ballRef.current.dy;
+
+    if (!gameReloaded) {
+      requestAnimationFrame(draw);
+    }
+  };
+
+  const drawBackground = () => {
+    if (ctx) {
+        ctx.fillStyle = backColor;
+        ctx.fillRect(0, 0, canvasRef.current?.width, canvasRef.current.height);
+    }
+};
+
+
+
   const drawRect = (x: number, y: number, width: number, height: number) => {
     if (ctx) {
       ctx.beginPath();
@@ -145,45 +191,49 @@ const New: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas || !ctx) return;
 
-    const drawBackground = () => {
-        if (ctx) {
-            ctx.fillStyle = backColor;
-            ctx.fillRect(0, 0, canvasRef.current?.width, canvasRef.current.height);
-        }
-    };
+    // const drawBackground = () => {
+    //     if (ctx) {
+    //         ctx.fillStyle = backColor;
+    //         ctx.fillRect(0, 0, canvasRef.current?.width, canvasRef.current.height);
+    //     }
+    // };
 
-    const draw = () => {
-      if (paused || !ctx || !canvasRef.current) return;
-      drawBackground();
-    //   clear();
-    //   ctx.fillStyle = backColor;
+    // const draw = () => {
+    //   if (paused || !ctx || !canvasRef.current) return;
+    //   drawBackground();
+    // //   clear();
+    // //   ctx.fillStyle = backColor;
       
-      ctx.fillStyle = ballColor;
-      // draw the ball
-      drawCircle(ballRef.current.x, ballRef.current.y, ballRef.current.radius);
-      ctx.fillStyle = paddleColor;
-      console.log("ball drawn");
-      // draw the paddle
-      drawRect(paddleX, canvasRef.current.height - paddleH, paddleW, paddleH);
-      console.log("paddle drawn");
+    //   ctx.fillStyle = ballColor;
+    //   // draw the ball
+    //   drawCircle(ballRef.current.x, ballRef.current.y, ballRef.current.radius);
+    //   ctx.fillStyle = paddleColor;
+    //   console.log("ball drawn");
+    //   // draw the paddle
+    //   drawRect(paddleX, canvasRef.current.height - paddleH, paddleW, paddleH);
+    //   console.log("paddle drawn");
 
-      // draw bricks
-      drawBricks();
+    //   // update ball positionx
+    //   ballRef.current.x += ballRef.current.dx;
+    //   ballRef.current.y += ballRef.current.dy;
 
-      // handle brick collision
-      handleBrickCollision();
+    //   // draw bricks
+    //   drawBricks();
 
-      // handle wall collision
-      handleWallCollision();
+    //   // handle brick collision
+    //   handleBrickCollision();
 
-      // update ball positionx
-      ballRef.current.x += ballRef.current.dx;
-      ballRef.current.y += ballRef.current.dy;
+    //   // handle wall collision
+    //   handleWallCollision();
 
-      if (!gameReloaded) {
-        requestAnimationFrame(draw);
-      }
-    };
+    // //   // update ball positionx
+    // //   ballRef.current.x += ballRef.current.dx;
+    // //   ballRef.current.y += ballRef.current.dy;
+
+    //   if (!gameReloaded) {
+    //     requestAnimationFrame(draw);
+    //   }
+    // };
 
     const id = requestAnimationFrame(draw);
     setIntervalId(id);
@@ -255,12 +305,23 @@ const New: React.FC = () => {
     setPaused(false); // set paused to false
     // updateScoreText();
     setBricks(initBricks()); // initialize the bricks, set all to visible
-    startAnimation(); // start a new animation loop
+    // startAnimation(); // start a new animation loop
     setGameReloaded(true); // reset the gameReloaded flag
-    setGameReloaded(false);
+    // setGameReloaded(false);
 
-    console.log("game reloaded");
+    // console.log("game reloaded");
+    console.log("Ball position:", ballRef.current);
+    console.log("Score:", score);
+    console.log("Paused:", paused);
+    console.log("Bricks:", bricks);
   };
+  useEffect(() => {
+    if (gameReloaded) {
+        startAnimation();
+        console.log("game reloaded");
+        setGameReloaded(false); // reset the gameReloaded flag
+    }
+  }, [gameReloaded]);
 
   const updateScoreText = () => {
     const scoreElement = document.getElementById("score");
