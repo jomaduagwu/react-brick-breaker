@@ -1,7 +1,5 @@
 // import React from 'react';
-// import BrickBreaker from "./components/Testtest";
-// import Test from "./components/Test";
-import New from "./components/New";
+import BrickBreaker from "./components/BrickBreaker";
 
 
 
@@ -10,7 +8,7 @@ const App = () => {
   return (
     <div className="App">
       {/* <canvas id="canvas" width={width} height={height}></canvas> */}
-      <New />
+      <BrickBreaker />
       {/* <p>Mouse moves platform &bull; Press any key to pause</p>
       <button onClick={reload}>Play again</button>
       <div id="score"></div> */}
